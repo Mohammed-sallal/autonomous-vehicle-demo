@@ -6,14 +6,21 @@ from ultralytics import YOLO
 from PIL import Image
 import numpy as np
 
-# --- 1. PAGE CONFIGURATION ---
+# --- 1. IMPORT MOVIEPY FOR VIDEO CONVERSION ---
+# This is crucial for making the video play on the web and reducing file size
+try:
+    from moviepy.editor import VideoFileClip
+except ImportError:
+    st.error("MoviePy is not installed. Please add 'moviepy' to requirements.txt")
+
+# --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="Autonomous Vehicle Vision",
     page_icon="🚘",
     layout="wide"
 )
 
-# --- 2. MODEL LOADING ---
+# --- 3. MODEL LOADING ---
 @st.cache_resource
 def load_model(model_path="best.pt"):
     """
@@ -29,23 +36,23 @@ def load_model(model_path="best.pt"):
         st.error(f"Error loading model: {e}")
         return None
 
-# --- 3. HELPER FUNCTIONS ---
-def get_video_writer(output_path, fps, width, height):
+# --- 4. VIDEO CONVERSION HELPER ---
+def convert_video_to_h264(input_path, output_path):
     """
-    Attempts to initialize a video writer with browser-compatible codecs.
+    Converts video to H.264 (Web Compatible) using MoviePy.
+    This fixes the "Black Screen" issue and compresses the file size.
     """
-    # Try H.264 (avc1) first - best for browsers (Chrome/Edge)
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
-    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
-    
-    # Check if writer opened successfully. If not, fallback to mp4v (Windows local)
-    if not out.isOpened():
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
-    
-    return out
+    try:
+        clip = VideoFileClip(input_path)
+        # write_videofile uses libx264 by default which works in all browsers
+        # 'preset="ultrafast"' speeds up compression
+        clip.write_videofile(output_path, codec="libx264", audio=False, logger=None, preset="ultrafast")
+        return True
+    except Exception as e:
+        st.error(f"Error converting video: {e}")
+        return False
 
-# --- 4. MAIN APP LOGIC ---
+# --- 5. MAIN APP LOGIC ---
 def main():
     # Load Model
     model = load_model()
@@ -63,7 +70,9 @@ def main():
     # Mode Selector
     mode = st.radio("Select Input Type:", ["🖼️ Image", "🎥 Video"], horizontal=True)
 
-    # --- IMAGE MODE ---
+    # ==========================================
+    #               IMAGE MODE
+    # ==========================================
     if mode == "🖼️ Image":
         uploaded_file = st.file_uploader("Upload an Image", type=['jpg', 'jpeg', 'png'])
         
@@ -90,7 +99,9 @@ def main():
                         st.image(res_image, use_column_width=True)
                         st.success(f"✅ Found {len(results[0].boxes)} objects.")
 
-    # --- VIDEO MODE ---
+    # ==========================================
+    #               VIDEO MODE
+    # ==========================================
     elif mode == "🎥 Video":
         uploaded_video = st.file_uploader("Upload a Video", type=['mp4', 'avi', 'mov', 'mkv'])
         
@@ -100,8 +111,13 @@ def main():
             tfile.write(uploaded_video.read())
             video_path = tfile.name
             
-            output_tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-            output_path = output_tfile.name
+            # Temporary "Raw" output (Fast to write, but big & incompatible)
+            raw_output_tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+            raw_output_path = raw_output_tfile.name
+
+            # Final "Web" output (Compressed & Web-ready)
+            final_output_tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+            final_output_path = final_output_tfile.name
 
             try:
                 cap = cv2.VideoCapture(video_path)
@@ -118,7 +134,9 @@ def main():
                     st.info(f"Loaded: {width}x{height} @ {fps} FPS | {total_frames} Frames")
                     
                     if st.button("▶️ Start Processing", type="primary"):
-                        out = get_video_writer(output_path, fps, width, height)
+                        # Use 'mp4v' for speed during the frame-by-frame detection step
+                        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+                        out = cv2.VideoWriter(raw_output_path, fourcc, fps, (width, height))
                         
                         progress_bar = st.progress(0)
                         status_text = st.empty()
@@ -137,13 +155,10 @@ def main():
                             
                             # YOLO Prediction
                             results = model.predict(frame, conf=conf_threshold, verbose=False)
-
-                            # ❗ FIX INJECTED HERE: plot() → RGB, convert to BGR for VideoWriter
-                            res_rgb = results[0].plot()
-                            res_bgr = cv2.cvtColor(res_rgb, cv2.COLOR_RGB2BGR)
-
-                            # Write BGR frame to video
-                            out.write(res_bgr)
+                            res_plotted = results[0].plot()
+                            
+                            # Write BGR frame to RAW video
+                            out.write(res_plotted)
                             
                             # UI Updates
                             frame_count += 1
@@ -151,34 +166,49 @@ def main():
                                 progress_bar.progress(min(frame_count / total_frames, 1.0))
                                 status_text.text(f"Processing Frame {frame_count}/{total_frames}")
 
-                        # Cleanup resources
+                        # 1. Close the OpenCV Writer and Reader
                         cap.release()
                         out.release()
                         
-                        # Success Logic
-                        status_text.success("✅ Processing Complete!")
-                        st.subheader("Processed Video")
+                        # 2. OPTIMIZATION STEP: Convert to Web-Ready Format
+                        status_text.text("Optimize video for web (Compressing)... this may take a moment.")
+                        success = convert_video_to_h264(raw_output_path, final_output_path)
                         
-                        # Read binary for display/download
-                        with open(output_path, 'rb') as v:
-                            video_bytes = v.read()
-                        
-                        st.video(video_bytes)
-                        
-                        st.download_button(
-                            label="⬇️ Download Result",
-                            data=video_bytes,
-                            file_name="autonomous_result.mp4",
-                            mime="video/mp4"
-                        )
+                        if success:
+                            status_text.success("✅ Analysis & Compression Complete!")
+                            st.subheader("Processed Video")
+                            
+                            # Read the optimized file
+                            with open(final_output_path, 'rb') as v:
+                                video_bytes = v.read()
+                            
+                            # Display it
+                            st.video(video_bytes)
+                            
+                            # Download Button
+                            st.download_button(
+                                label="⬇️ Download Optimized Result",
+                                data=video_bytes,
+                                file_name="autonomous_result.mp4",
+                                mime="video/mp4"
+                            )
+                        else:
+                            st.error("Video conversion failed. Please check if 'moviepy' is in requirements.txt")
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
             finally:
-                # Always clean up input temp file
-                if os.path.exists(video_path):
-                    os.remove(video_path)
-                # Note: We keep output_path briefly for download, Streamlit cleans temp eventually
+                # Cleanup ALL temp files to keep the server clean
+                for path in [video_path, raw_output_path, final_output_path]:
+                    if os.path.exists(path):
+                        try:
+                            # We keep final output briefly for download/viewing if needed, 
+                            # but usually Streamlit handles the buffer in memory for the button.
+                            # We delete raw files immediately.
+                            if path != final_output_path: 
+                                os.remove(path)
+                        except:
+                            pass
 
 if __name__ == "__main__":
     main()
