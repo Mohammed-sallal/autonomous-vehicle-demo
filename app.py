@@ -118,7 +118,7 @@ elif mode == "🎥 Video":
                 output_tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
                 output_path = output_tfile.name
                 
-                # --- FIX: Try 'avc1' (H.264) for browser support ---
+                # --- FIX 1: Try 'avc1' (H.264) for browser support ---
                 try:
                     fourcc = cv2.VideoWriter_fourcc(*'avc1')
                 except:
@@ -159,13 +159,13 @@ elif mode == "🎥 Video":
                 status_text.success("✅ Analysis Complete!")
                 st.subheader("Processed Video")
                 
-                # --- CRITICAL FIX: Read as binary for Streamlit Player ---
+                # --- FIX 2: Read as binary for Streamlit Player ---
                 with open(output_path, 'rb') as v:
                     video_bytes = v.read()
                 
                 st.video(video_bytes)
                 
-                # --- BACKUP: Download Button ---
+                # --- FIX 3: Add Download Button ---
                 st.download_button(
                     label="⬇️ Download Processed Video",
                     data=video_bytes,
