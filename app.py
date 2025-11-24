@@ -137,10 +137,13 @@ def main():
                             
                             # YOLO Prediction
                             results = model.predict(frame, conf=conf_threshold, verbose=False)
-                            res_plotted = results[0].plot()
-                            
+
+                            # ❗ FIX INJECTED HERE: plot() → RGB, convert to BGR for VideoWriter
+                            res_rgb = results[0].plot()
+                            res_bgr = cv2.cvtColor(res_rgb, cv2.COLOR_RGB2BGR)
+
                             # Write BGR frame to video
-                            out.write(res_plotted)
+                            out.write(res_bgr)
                             
                             # UI Updates
                             frame_count += 1
