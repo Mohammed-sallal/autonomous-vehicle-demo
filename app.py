@@ -118,8 +118,12 @@ elif mode == "🎥 Video":
                 output_tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
                 output_path = output_tfile.name
                 
-                # Define codec (mp4v is widely supported for .mp4)
-                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+                # --- FIX: Try 'avc1' (H.264) for browser support ---
+                try:
+                    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+                except:
+                    fourcc = cv2.VideoWriter_fourcc(*'mp4v') # Fallback for Windows local run
+                    
                 out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
                 
                 # 3. Processing Loop
@@ -148,14 +152,27 @@ elif mode == "🎥 Video":
                     if total_frames > 0:
                         progress_bar.progress(min(frame_count / total_frames, 1.0))
                 
-                # Release resources
                 cap.release()
                 out.release()
                 
-                # 4. Show Result
+                # 4. Display Result
                 status_text.success("✅ Analysis Complete!")
                 st.subheader("Processed Video")
-                st.video(output_path)
                 
-                # Cleanup input temp file (keep output for viewing)
+                # --- CRITICAL FIX: Read as binary for Streamlit Player ---
+                with open(output_path, 'rb') as v:
+                    video_bytes = v.read()
+                
+                st.video(video_bytes)
+                
+                # --- BACKUP: Download Button ---
+                st.download_button(
+                    label="⬇️ Download Processed Video",
+                    data=video_bytes,
+                    file_name="autonomous_vehicle_result.mp4",
+                    mime="video/mp4"
+                )
+                
+                # Cleanup input temp file
                 os.remove(video_path)
+                # We keep output_path briefly so the download button works
