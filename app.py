@@ -26,17 +26,17 @@ st.markdown("""
     <style>
         /* Main Background Color */
         .stApp {
-            background-color: #00301F;
+            background-color: #55738D;
         }
         
         /* Sidebar Background Color */
         [data-testid="stSidebar"] {
-            background-color: #075422;
+            background-color: #96A7B6;
         }
         
         /* General Text Color (Main Area) */
         .stApp, p, label, .stMarkdown, .stText, h1, h2, h3, h4, h5, h6, li, span {
-            color: #F9FFCC !important;
+            color: #CBC8C4 !important;
         }
         
         /* Sidebar Text Color */
@@ -218,4 +218,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
