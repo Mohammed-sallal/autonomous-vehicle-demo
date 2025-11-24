@@ -15,60 +15,16 @@ except ImportError:
 # --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="Object Detection System",
-    page_icon="favicon.ico",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM STYLING (THEME) ---
-# Injecting CSS to enforce colors and the specific FONT for the title
-st.markdown("""
-    <style>
-        /* Main Background Color */
-        .stApp {
-            background-color: #003812;
-        }
-        
-        /* Sidebar Background Color */
-        [data-testid="stSidebar"] {
-            background-color: #075422;
-        }
-        
-        /* General Text Color (Main Area) - Default Font */
-        .stApp, p, label, .stMarkdown, .stText, li, span {
-            color: #F9FFCC !important;
-        }
-        
-        /* Sidebar Text Color */
-        [data-testid="stSidebar"] p, [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
-            color: #F9FFCC !important;
-        }
-
-        /* --- TITLE FONT SETTING --- */
-        /* Targets the main title (h1) to use Stella Aesta */
-        h1 {
-            font-family: 'Stella Aesta', sans-serif !important;
-            color: #F9FFCC !important;
-            font-weight: normal; /* Optional: Adjusts weight if the font is naturally bold */
-        }
-        
-        /* Other Headings */
-        h2, h3, h4, h5, h6 {
-            color: #F9FFCC !important;
-        }
-        
-        /* File Uploader Style */
-        [data-testid="stFileUploader"] {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 10px;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- 4. MODEL LOADING ---
+# --- 3. MODEL LOADING ---
 @st.cache_resource
 def load_model(model_path="best.pt"):
+    """
+    Loads the YOLO model securely. Caches the model to prevent reloading.
+    """
     if not os.path.exists(model_path):
         st.error(f"Critical Error: Model file '{model_path}' not found.")
         return None
@@ -79,34 +35,41 @@ def load_model(model_path="best.pt"):
         st.error(f"Model Load Error: {e}")
         return None
 
-# --- 5. VIDEO CONVERSION HELPER ---
+# --- 4. VIDEO CONVERSION HELPER ---
 def convert_video_to_h264(input_path, output_path):
+    """
+    Converts video to H.264 for web compatibility.
+    """
     try:
         clip = VideoFileClip(input_path)
+        # Using 'ultrafast' preset for quicker processing
         clip.write_videofile(output_path, codec="libx264", audio=False, logger=None, preset="ultrafast")
         return True
     except Exception as e:
         st.error(f"Encoding Error: {e}")
         return False
 
-# --- 6. MAIN APP LOGIC ---
+# --- 5. MAIN APP LOGIC ---
 def main():
+    # Load Model
     model = load_model()
     
     # --- SIDEBAR CONFIGURATION ---
     st.sidebar.header("System Configuration")
+    
+    # Input Mode Selector
     mode = st.sidebar.selectbox("Select Data Source", ["Image Analysis", "Video Analysis"])
     
-    st.sidebar.divider()
+    st.sidebar.markdown("---")
     
+    # Model Settings
     st.sidebar.subheader("Model Parameters")
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.35, 0.05)
     
-    st.sidebar.divider()
+    st.sidebar.markdown("---")
     st.sidebar.caption("Autonomous Vehicle Perception Module v1.0")
 
     # --- MAIN INTERFACE ---
-    # The font 'Stella Aesta' will apply to this title because of the h1 CSS above
     st.title("Autonomous Vehicle Object Detection")
     st.markdown("### Real-time Perception System")
     st.markdown("---")
@@ -117,6 +80,8 @@ def main():
         
         if uploaded_file and model:
             image = Image.open(uploaded_file)
+            
+            # Layout: Input vs Output
             col1, col2 = st.columns(2)
             
             with col1:
@@ -128,10 +93,14 @@ def main():
                 if st.button("Run Inference", type="primary"):
                     with st.spinner("Processing image data..."):
                         results = model.predict(image, conf=conf_threshold)
+                        
+                        # Plot results
                         res_plotted = results[0].plot()
                         res_image = cv2.cvtColor(res_plotted, cv2.COLOR_BGR2RGB)
                         
                         st.image(res_image, use_column_width=True)
+                        
+                        # Metrics
                         obj_count = len(results[0].boxes)
                         st.info(f"Objects Detected: {obj_count}")
 
@@ -140,6 +109,7 @@ def main():
         uploaded_video = st.file_uploader("Upload Video File", type=['mp4', 'avi', 'mov', 'mkv'])
         
         if uploaded_video and model:
+            # Create temp files
             tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
             tfile.write(uploaded_video.read())
             video_path = tfile.name
@@ -161,6 +131,7 @@ def main():
                     fps = int(cap.get(cv2.CAP_PROP_FPS))
                     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
                     
+                    # File Metadata
                     st.caption(f"Source Metadata: {width}x{height} | {fps} FPS | {total_frames} Frames")
                     
                     if st.button("Start Analysis", type="primary"):
@@ -182,10 +153,12 @@ def main():
                                 status_text.warning("Analysis interrupted by user.")
                                 break
                             
+                            # Inference
                             results = model.predict(frame, conf=conf_threshold, verbose=False)
                             res_plotted = results[0].plot()
                             out.write(res_plotted)
                             
+                            # UI Update
                             frame_count += 1
                             if total_frames > 0:
                                 progress_bar.progress(min(frame_count / total_frames, 1.0))
@@ -194,6 +167,7 @@ def main():
                         cap.release()
                         out.release()
                         
+                        # Optimization
                         status_text.text("Optimizing video codec for web playback...")
                         success = convert_video_to_h264(raw_output_path, final_output_path)
                         
@@ -218,10 +192,12 @@ def main():
             except Exception as e:
                 st.error(f"Runtime Error: {e}")
             finally:
+                # Cleanup logic
                 for path in [video_path, raw_output_path, final_output_path]:
-                    if os.path.exists(path) and path != final_output_path:
+                    if os.path.exists(path):
                         try:
-                            os.remove(path)
+                            if path != final_output_path:
+                                os.remove(path)
                         except:
                             pass
 
