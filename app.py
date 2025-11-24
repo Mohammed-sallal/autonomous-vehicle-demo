@@ -26,7 +26,7 @@ st.markdown("""
     <style>
         /* Main Background Color */
         .stApp {
-            background-color: #003812;
+            background-color: #00301F;
         }
         
         /* Sidebar Background Color */
@@ -218,3 +218,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
