@@ -95,8 +95,8 @@ elif mode == "🎥 Video":
     uploaded_video = st.file_uploader("Upload a Video", type=['mp4', 'avi', 'mov'])
     
     if uploaded_video and model:
-        # Save temp file
-        tfile = tempfile.NamedTemporaryFile(delete=False)
+        # 1. Save input video to temp file
+        tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
         tfile.write(uploaded_video.read())
         video_path = tfile.name
 
@@ -108,47 +108,54 @@ elif mode == "🎥 Video":
             # Video Stats
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             fps = int(cap.get(cv2.CAP_PROP_FPS))
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             
             st.info(f"Video Loaded: {width}x{height} @ {fps}fps | {total_frames} frames")
             
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                run_btn = st.button("▶️ Start Video Analysis", type="primary")
-                stop_btn = st.button("⏹️ Stop Processing")
-            
-            with col2:
-                st_frame = st.empty()
-                progress_bar = st.progress(0)
+            if st.button("▶️ Start Processing", type="primary"):
+                # 2. Prepare Output Video
+                output_tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+                output_path = output_tfile.name
                 
-                if run_btn:
-                    frame_count = 0
-                    while cap.isOpened():
-                        ret, frame = cap.read()
-                        if not ret:
-                            break
-                        
-                        if stop_btn:
-                            st.warning("Stopped by user.")
-                            break
-                        
-                        # Resize for performance (optional)
-                        # frame = cv2.resize(frame, (640, 360))
-                        
-                        # Predict
-                        results = model.predict(frame, conf=conf_threshold, verbose=False)
-                        res_plotted = results[0].plot()
-                        res_rgb = cv2.cvtColor(res_plotted, cv2.COLOR_BGR2RGB)
-                        
-                        # Display
-                        st_frame.image(res_rgb, caption=f"Processing Frame {frame_count}/{total_frames}", use_column_width=True)
-                        
-                        frame_count += 1
-                        if total_frames > 0:
-                            progress_bar.progress(min(frame_count / total_frames, 1.0))
+                # Define codec (mp4v is widely supported for .mp4)
+                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+                out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+                
+                # 3. Processing Loop
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                status_text.text("Processing video frames... please wait.")
+                
+                frame_count = 0
+                
+                while cap.isOpened():
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
                     
-                    cap.release()
-                    st.success("Analysis Complete!")
-                    # Cleanup
-                    os.remove(video_path)
+                    # Run YOLO prediction
+                    results = model.predict(frame, conf=conf_threshold, verbose=False)
+                    
+                    # Plot detections on the frame
+                    res_plotted = results[0].plot()
+                    
+                    # Write frame to output video
+                    out.write(res_plotted)
+                    
+                    # Update Progress
+                    frame_count += 1
+                    if total_frames > 0:
+                        progress_bar.progress(min(frame_count / total_frames, 1.0))
+                
+                # Release resources
+                cap.release()
+                out.release()
+                
+                # 4. Show Result
+                status_text.success("✅ Analysis Complete!")
+                st.subheader("Processed Video")
+                st.video(output_path)
+                
+                # Cleanup input temp file (keep output for viewing)
+                os.remove(video_path)
