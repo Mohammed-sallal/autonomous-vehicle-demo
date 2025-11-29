@@ -19,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME + NEON SLIDER) ---
+# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME) ---
 st.markdown("""
     <style>
         /* Import Custom Font */
@@ -112,40 +112,38 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION (MATCHING THEME) */
+        /* 7. SLIDER COLOR CUSTOMIZATION (FINAL FIX) */
         
-        /* The Thumb (Draggable Circle) */
-        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
+        /* Thumb (The circle you drag) */
+        div[data-testid="stSlider"] div[role="slider"] {
             background-color: #66fcf1 !important; /* Neon Teal */
-            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5); /* Glow Effect */
             border: 2px solid #45a29e !important;
+            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8);
         }
         
-        /* The Track (The filled line to the left) */
-        div.stSlider > div[data-baseweb="slider"] > div > div {
-            background: #45a29e !important; /* Slate Blue/Green */
+        /* Track (The filled line) */
+        div[data-testid="stSlider"] div[data-baseweb="slider"] > div > div > div:first-child {
+            background: #45a29e !important;
         }
         
-        /* The Value Text (The number above the slider) */
+        /* Value Popup (e.g., "0.35") */
         div[data-testid="stMarkdownContainer"] p {
-            color: #66fcf1 !important; /* Neon Teal Text */
+            color: #66fcf1 !important; 
         }
         
-        /* The Min/Max Labels (0.0 and 1.0) */
+        /* Min/Max Labels (0.0 and 1.0) */
         div[data-testid="stSliderTickBar"] > div {
-             color: #c5c6c7 !important; /* Light Grey Text */
+             color: #c5c6c7 !important;
         }
 
-        /* 8. RADIO BUTTONS */
-        [data-testid="stRadio"] > label {
+        /* 8. RADIO BUTTONS / PILLS STYLING */
+        /* This targets the segmented control (pills) to make them look like tabs */
+        div[data-baseweb="select"] > div {
+            background-color: #1f2833 !important;
             color: #c5c6c7 !important;
-            font-weight: bold;
+            border: 1px solid #45a29e !important;
         }
-        div[role="radiogroup"] > label > div:first-child {
-            background-color: #66fcf1 !important;
-            border-color: #45a29e !important;
-        }
-
+        
     </style>
 """, unsafe_allow_html=True)
 
@@ -184,9 +182,18 @@ def main():
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
     
-    # Input Selection
+    # --- UPDATED: SEGMENTED CONTROL FOR INPUT ---
+    # Using 'selectbox' instead of radio for a cleaner dropdown look, 
+    # OR you can use st.radio(..., horizontal=True) for a toggle bar look.
+    # Let's use horizontal radio for a "Tab/Toggle" feel inside the sidebar.
+    
     st.sidebar.subheader("System Input")
-    input_type = st.sidebar.radio("Data Source", ["Image", "Video"], label_visibility="collapsed")
+    input_type = st.sidebar.radio(
+        "Data Source", 
+        ["Image Analysis", "Video Analysis"], 
+        label_visibility="collapsed",
+        horizontal=False # Vertical list looks more like a menu
+    )
     
     st.sidebar.markdown("---")
     
@@ -245,7 +252,7 @@ def main():
         st.title("Autonomous Vehicle Object Detection")
         
         # --- IMAGE LOGIC ---
-        if input_type == "Image":
+        if input_type == "Image Analysis":
             st.subheader("Image Analysis Module")
             uploaded_file = st.file_uploader("Upload Image File", type=['jpg', 'jpeg', 'png'])
             
@@ -271,7 +278,7 @@ def main():
                             st.info(f"Targets Identified: {count}")
 
         # --- VIDEO LOGIC ---
-        elif input_type == "Video":
+        elif input_type == "Video Analysis":
             st.subheader("Video Analysis Module")
             uploaded_video = st.file_uploader("Upload Video File", type=['mp4', 'avi', 'mov', 'mkv'])
             
