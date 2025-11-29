@@ -156,6 +156,7 @@ def main():
     
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
+    st.sidebar.markdown("---")
     
     # Input Selection - USING SELECTBOX AS REQUESTED
     st.sidebar.subheader("System Input")
@@ -337,3 +338,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
