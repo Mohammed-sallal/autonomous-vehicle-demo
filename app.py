@@ -117,8 +117,8 @@ st.markdown("""
         /* Target the Thumb (The draggable circle) */
         div[data-testid="stSlider"] div[role="slider"] {
             background-color: #66fcf1 !important; /* Neon Teal */
-            border: 2px solid #45a29e !important;
-            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8);
+            border: 4px solid #45a29e !important;
+            box-shadow: 0 0 3px rgba(102, 252, 241, 0.8);
         }
         
         /* Target the Track (The filled line) */
@@ -360,3 +360,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
