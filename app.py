@@ -14,7 +14,7 @@ except ImportError:
 
 # --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="DEPI Graduation Project",
+    page_title="AV Perception System",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -45,6 +45,8 @@ st.markdown("""
             font-size: 0.9rem;
             letter-spacing: 0.1em;
             font-weight: 700;
+            margin-bottom: 0px !important; /* Reduce space below headers */
+            padding-bottom: 5px !important;
         }
         
         /* Sidebar Labels */
@@ -53,6 +55,19 @@ st.markdown("""
             font-size: 0.75rem;
             text-transform: uppercase;
             font-weight: 600;
+        }
+        
+        /* Reduce gap between sidebar elements */
+        [data-testid="stSidebar"] div[data-testid="stVerticalBlock"] > div {
+            gap: 0.5rem !important; /* Reduces vertical gap between widgets */
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+        
+        /* Reduce space around dividers */
+        [data-testid="stSidebar"] hr {
+            margin-top: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
         }
 
         /* 3. TYPOGRAPHY */
@@ -77,7 +92,7 @@ st.markdown("""
             color: #66fcf1;
             border: 1px solid #45a29e;
             border-radius: 0px; 
-            padding: 0.6rem 1.5rem;
+            padding: 0.4rem 1rem; /* Reduced padding inside buttons */
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
             font-weight: bold;
@@ -98,7 +113,7 @@ st.markdown("""
             background-color: #1f2833;
             border: 1px dashed #45a29e;
             border-radius: 4px;
-            padding: 20px;
+            padding: 15px; /* Slightly reduced padding */
         }
         
         /* 6. METRICS */
@@ -111,9 +126,6 @@ st.markdown("""
             color: #ffffff;
             font-family: 'Courier New', monospace;
         }
-
-        /* 7. SLIDER - REVERTED TO DEFAULT (NO CUSTOM CSS) */
-        /* This allows Streamlit's default red accent to show through correctly without glitches */
 
     </style>
 """, unsafe_allow_html=True)
@@ -152,7 +164,6 @@ def main():
     
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
-    st.sidebar.markdown("---")
     
     # Input Selection - USING SELECTBOX AS REQUESTED
     st.sidebar.subheader("System Input")
@@ -165,7 +176,7 @@ def main():
     st.sidebar.markdown("---")
     
     # Model Parameters
-    st.sidebar.subheader("Parameters")
+    st.sidebar.subheader("Sensitivity")
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.35, 0.05)
     
     st.sidebar.markdown("---")
@@ -334,4 +345,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
