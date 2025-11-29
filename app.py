@@ -19,63 +19,47 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME) ---
+# --- 3. CUSTOM CSS (DARK THEME + NEON ACCENTS) ---
 st.markdown("""
     <style>
-        /* Import Custom Font */
         @import url('https://fonts.cdnfonts.com/css/stella-aesta');
 
-        /* 1. MAIN BACKGROUND */
+        /* Main Background */
         .stApp {
-            background-color: #0b0c10; /* Deep Carbon Black */
-            color: #c5c6c7; /* Light Grey Text */
+            background-color: #0b0c10;
+            color: #c5c6c7;
         }
         
-        /* 2. SIDEBAR (CONTROL PANEL) */
+        /* Sidebar Background */
         [data-testid="stSidebar"] {
-            background-color: #1f2833; /* Dark Slate */
-            border-right: 1px solid #45a29e; /* Thin Teal Border */
+            background-color: #1f2833;
+            border-right: 1px solid #45a29e;
         }
         
-        /* Sidebar Headers */
-        [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-            color: #66fcf1; /* Neon Teal */
+        /* Sidebar Text */
+        [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
+            color: #66fcf1 !important;
             font-family: 'Helvetica Neue', sans-serif;
             text-transform: uppercase;
             font-size: 0.9rem;
-            letter-spacing: 0.1em;
-            font-weight: 700;
+            letter-spacing: 0.05em;
         }
         
-        /* Sidebar Labels */
-        [data-testid="stSidebar"] label {
-            color: #c5c6c7 !important;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        /* 3. TYPOGRAPHY */
+        /* Main Title Font */
         h1 {
             font-family: 'Stella Aesta', sans-serif !important;
-            color: #66fcf1; 
+            color: #66fcf1;
             font-weight: normal;
             font-size: 3.5rem !important;
             text-shadow: 0px 0px 10px rgba(102, 252, 241, 0.3);
         }
         
-        h2, h3, h4 {
-            font-family: 'Helvetica Neue', sans-serif;
-            color: #ffffff;
-            font-weight: 600;
-        }
-        
-        /* 4. PROFESSIONAL BUTTONS */
+        /* Buttons */
         .stButton button {
             background-color: transparent;
             color: #66fcf1;
             border: 1px solid #45a29e;
-            border-radius: 0px; 
+            border-radius: 0px;
             padding: 0.6rem 1.5rem;
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
@@ -92,51 +76,25 @@ st.markdown("""
             border-color: #66fcf1;
         }
 
-        /* 5. FILE UPLOADER STYLE */
-        [data-testid="stFileUploader"] {
-            background-color: #1f2833;
-            border: 1px dashed #45a29e;
-            border-radius: 4px;
-            padding: 20px;
-        }
-        
-        /* 6. METRICS */
-        [data-testid="stMetricLabel"] {
-            color: #45a29e;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-        [data-testid="stMetricValue"] {
-            color: #ffffff;
-            font-family: 'Courier New', monospace;
-        }
+        /* Metrics */
+        [data-testid="stMetricLabel"] { color: #45a29e; }
+        [data-testid="stMetricValue"] { color: #ffffff; font-family: 'Courier New', monospace; }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION (COMPLETE OVERHAUL) */
-        
-        /* The Thumb (Draggable Circle) */
-        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
-            background-color: #66fcf1 !important; 
-            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8); 
-            border: none !important;
+        /* --- SLIDER STYLING (FIXED) --- */
+        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"] {
+            background-color: #66fcf1 !important;
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+            border: none;
         }
-        
-        /* The Track (The filled line to the left) */
         div.stSlider > div[data-baseweb="slider"] > div > div {
-            background: #45a29e !important; 
+            background: #45a29e !important;
         }
-        
-        /* The Value Text (The number "0.35" above the slider) */
         div[data-testid="stMarkdownContainer"] p {
-            color: #66fcf1 !important; /* Force Teal color for the value */
+            color: #66fcf1 !important;
         }
         
-        /* The Min/Max Labels (0.0 and 1.0) */
-        div[data-testid="stSliderTickBar"] > div {
-             color: #c5c6c7 !important;
-        }
-
-        /* 8. RADIO BUTTONS */
-        [data-testid="stRadio"] > label {
+        /* Radio Buttons */
+        [data-testid="stRadio"] label {
             color: #c5c6c7 !important;
             font-weight: bold;
         }
@@ -180,12 +138,12 @@ def convert_video_to_h264(input_path, output_path):
 def main():
     model = load_model()
     
-    # --- SIDEBAR: CONTROL PANEL ---
-    st.sidebar.header("Control Panel")
+    # --- SIDEBAR CONFIGURATION ---
+    st.sidebar.title("System Config")
     
-    # Input Selection
-    st.sidebar.subheader("System Input")
-    input_type = st.sidebar.radio("Data Source", ["Image", "Video"], label_visibility="collapsed")
+    # Input Type
+    st.sidebar.subheader("Input Source")
+    input_type = st.sidebar.radio("Select Type", ["Image", "Video"], label_visibility="collapsed")
     
     st.sidebar.markdown("---")
     
@@ -195,15 +153,12 @@ def main():
     
     st.sidebar.markdown("---")
     
-    # Project Summary Button (Toggle)
-    if st.sidebar.button("System Info"):
+    # Project Summary Button
+    if st.sidebar.button("Project Summary"):
         st.session_state.view_summary = not st.session_state.view_summary
 
     st.sidebar.markdown("---")
-    
-    # Status Indicator
-    st.sidebar.caption("Status: System Online")
-    st.sidebar.caption("v1.0 | YOLOv11n")
+    st.sidebar.caption("System Status: Online | v1.0")
 
     # --- MAIN CONTENT AREA ---
     
@@ -228,61 +183,55 @@ def main():
         - Shahd Farid
         """)
         
-        # Display Metrics in columns
         st.markdown("#### Performance Metrics")
         col1, col2, col3 = st.columns(3)
-        col1.metric("Mean Average Precision", "50.0%")
+        col1.metric("mAP@50", "50.0%")
         col2.metric("Precision", "69.9%")
         col3.metric("Recall", "45.1%")
         
-        if st.button("Return to Operation"):
+        if st.button("Back to Detection"):
             st.session_state.view_summary = False
             st.rerun()
 
-    # 2. VIEW: DETECTION INTERFACE (Image/Video)
+    # 2. VIEW: DETECTION INTERFACE
     else:
         st.title("Autonomous Vehicle Object Detection")
         
-        # --- IMAGE LOGIC ---
+        # --- IMAGE MODE ---
         if input_type == "Image":
-            st.subheader("Image Analysis Module")
-            uploaded_file = st.file_uploader("Upload Image File", type=['jpg', 'jpeg', 'png'])
+            uploaded_file = st.file_uploader("Upload Image", type=['jpg', 'jpeg', 'png'])
             
             if uploaded_file and model:
                 image = Image.open(uploaded_file)
                 col1, col2 = st.columns(2)
                 
                 with col1:
-                    st.caption("INPUT FEED")
-                    st.image(image, use_column_width=True)
+                    st.image(image, caption="Input Data", use_column_width=True)
                 
                 with col2:
-                    st.caption("ANALYSIS OUTPUT")
-                    if st.button("Execute Inference", type="primary"):
-                        with st.spinner("Processing neural network..."):
+                    if st.button("Run Inference", type="primary"):
+                        with st.spinner("Processing..."):
                             results = model.predict(image, conf=conf_threshold)
                             res_plotted = results[0].plot()
                             res_image = cv2.cvtColor(res_plotted, cv2.COLOR_BGR2RGB)
                             
-                            st.image(res_image, use_column_width=True)
+                            st.image(res_image, caption="Detection Result", use_column_width=True)
                             
                             count = len(results[0].boxes)
-                            st.info(f"Targets Identified: {count}")
+                            st.info(f"Objects Detected: {count}")
 
-        # --- VIDEO LOGIC ---
+        # --- VIDEO MODE ---
         elif input_type == "Video":
-            st.subheader("Video Analysis Module")
-            uploaded_video = st.file_uploader("Upload Video File", type=['mp4', 'avi', 'mov', 'mkv'])
+            uploaded_video = st.file_uploader("Upload Video", type=['mp4', 'avi', 'mov', 'mkv'])
             
             if uploaded_video and model:
-                # Initialize variables to avoid UnboundLocalError
+                # Variable Initialization
                 video_path = None
                 raw_path = None
                 final_path = None
-                cap = None # Initialize cap to None
+                cap = None
 
                 try:
-                    # Create temp files
                     tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
                     tfile.write(uploaded_video.read())
                     video_path = tfile.name
@@ -293,29 +242,29 @@ def main():
                     cap = cv2.VideoCapture(video_path)
                     
                     if not cap.isOpened():
-                        st.error("Error opening video stream.")
+                        st.error("Error opening video.")
                     else:
                         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
                         fps = int(cap.get(cv2.CAP_PROP_FPS))
                         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
                         
-                        st.caption(f"Stream Data: {width}x{height} | {fps} FPS | {total_frames} Frames")
+                        st.caption(f"Video: {width}x{height} | {fps} FPS | {total_frames} Frames")
                         
-                        if st.button("Initiate Sequence", type="primary"):
+                        if st.button("Start Analysis", type="primary"):
                             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
                             out = cv2.VideoWriter(raw_path, fourcc, fps, (width, height))
                             
                             progress_bar = st.progress(0)
                             status_text = st.empty()
-                            stop_button = st.button("Abort Sequence")
+                            stop_button = st.button("Stop Analysis")
                             
                             frame_count = 0
                             while cap.isOpened():
                                 ret, frame = cap.read()
                                 if not ret: break
                                 if stop_button:
-                                    status_text.warning("Sequence Aborted.")
+                                    status_text.warning("Analysis stopped.")
                                     break
                                 
                                 results = model.predict(frame, conf=conf_threshold, verbose=False)
@@ -325,34 +274,32 @@ def main():
                                 frame_count += 1
                                 if total_frames > 0:
                                     progress_bar.progress(min(frame_count / total_frames, 1.0))
-                                    status_text.text(f"Scanning Frame {frame_count}/{total_frames}")
+                                    status_text.text(f"Processing frame {frame_count}/{total_frames}")
 
                             cap.release()
                             out.release()
                             
-                            status_text.text("Encoding stream for playback...")
+                            status_text.text("Optimizing video for web...")
                             if convert_video_to_h264(raw_path, final_path):
-                                status_text.success("Sequence Complete.")
+                                status_text.success("Complete.")
                                 
                                 with open(final_path, 'rb') as v:
                                     video_bytes = v.read()
                                 
                                 st.video(video_bytes)
-                                st.download_button("Export Data", video_bytes, "detection_log.mp4", "video/mp4")
+                                st.download_button("Download Result", video_bytes, "result.mp4", "video/mp4")
                             else:
-                                st.error("Encoding protocol failed.")
+                                st.error("Video optimization failed.")
 
                 except Exception as e:
-                    st.error(f"Runtime Error: {e}")
+                    st.error(f"Error: {e}")
                 finally:
-                    # Robust Cleanup
+                    # Cleanup
                     try: 
-                        if cap is not None:
-                            cap.release()
+                        if cap is not None: cap.release()
                     except: pass
                     
                     for path in [video_path, raw_path, final_path]:
-                        # Only delete if path exists and is not None
                         if path and os.path.exists(path) and path != final_path:
                             try: os.remove(path)
                             except: pass
