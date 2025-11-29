@@ -112,29 +112,8 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION (FINAL FIX) */
-        
-        /* Thumb (The circle you drag) */
-        div[data-testid="stSlider"] div[role="slider"] {
-            background-color: #66fcf1 !important; /* Neon Teal */
-            border: 2px solid #45a29e !important;
-            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8);
-        }
-        
-        /* Track (The filled line) */
-        div[data-testid="stSlider"] div[data-baseweb="slider"] > div > div > div:first-child {
-            background: #45a29e !important;
-        }
-        
-        /* Value Popup (e.g., "0.35") */
-        div[data-testid="stMarkdownContainer"] p {
-            color: #66fcf1 !important; 
-        }
-        
-        /* Min/Max Labels (0.0 and 1.0) */
-        div[data-testid="stSliderTickBar"] > div {
-             color: #c5c6c7 !important;
-        }
+        /* 7. SLIDER - REVERTED TO DEFAULT (NO CUSTOM CSS) */
+        /* This allows Streamlit's default red accent to show through correctly without glitches */
 
     </style>
 """, unsafe_allow_html=True)
@@ -174,7 +153,7 @@ def main():
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
     
-    # Input Selection - CHANGED TO SELECTBOX (DROPDOWN)
+    # Input Selection - USING SELECTBOX AS REQUESTED
     st.sidebar.subheader("System Input")
     input_type = st.sidebar.selectbox(
         "Choose Data Source", 
