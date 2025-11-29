@@ -14,7 +14,7 @@ except ImportError:
 
 # --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="AV Perception System",
+    page_title="DEPI Graduation Project",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -45,7 +45,7 @@ st.markdown("""
             font-size: 0.9rem;
             letter-spacing: 0.1em;
             font-weight: 700;
-            margin-bottom: 0px !important; /* Reduce space below headers */
+            margin-bottom: 0px !important;
             padding-bottom: 5px !important;
         }
         
@@ -57,21 +57,12 @@ st.markdown("""
             font-weight: 600;
         }
         
-        /* Reduce gap between sidebar elements */
+        /* Sidebar Spacing */
         [data-testid="stSidebar"] div[data-testid="stVerticalBlock"] > div {
-            gap: 0.5rem !important; /* Reduces vertical gap between widgets */
-            padding-top: 0px !important;
-            padding-bottom: 0px !important;
-        }
-        
-        /* Reduce space around dividers */
-        [data-testid="stSidebar"] hr {
-            margin-top: 0.5rem !important;
-            margin-bottom: 0.5rem !important;
+            gap: 0.7rem !important; /* Increased gap slightly for better readability */
         }
 
         /* 3. TYPOGRAPHY */
-        /* Main Title with Custom Font */
         h1 {
             font-family: 'Stella Aesta', sans-serif !important;
             color: #66fcf1; 
@@ -86,19 +77,20 @@ st.markdown("""
             font-weight: 600;
         }
         
-        /* 4. PROFESSIONAL BUTTONS */
+        /* 4. PROFESSIONAL BUTTONS (Increased Size) */
         .stButton button {
             background-color: transparent;
             color: #66fcf1;
             border: 1px solid #45a29e;
             border-radius: 0px; 
-            padding: 0.4rem 1rem; /* Reduced padding inside buttons */
+            padding: 0.6rem 1.2rem; /* INCREASED PADDING HERE */
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 0.1em;
             transition: all 0.3s ease;
             width: 100%;
+            font-size: 0.9rem; /* Slightly larger text */
         }
         
         .stButton button:hover {
@@ -113,7 +105,7 @@ st.markdown("""
             background-color: #1f2833;
             border: 1px dashed #45a29e;
             border-radius: 4px;
-            padding: 15px; /* Slightly reduced padding */
+            padding: 20px;
         }
         
         /* 6. METRICS */
@@ -176,7 +168,7 @@ def main():
     st.sidebar.markdown("---")
     
     # Model Parameters
-    st.sidebar.subheader("Sensitivity")
+    st.sidebar.subheader("Parameters")
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.35, 0.05)
     
     st.sidebar.markdown("---")
