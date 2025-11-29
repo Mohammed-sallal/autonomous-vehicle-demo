@@ -300,7 +300,7 @@ def main():
                             if convert_video_to_h264(raw_path, final_path):
                                 status_text.success("Sequence Complete.")
                                 
-                                with open(final_output_path, 'rb') as v:
+                                with open(final_path, 'rb') as v:
                                     video_bytes = v.read()
                                 
                                 st.video(video_bytes)
