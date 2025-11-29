@@ -14,14 +14,18 @@ except ImportError:
 
 # --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="AV Perception System",
+    page_title="DEPI graduation project",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM CSS (PROFESSIONAL THEME) ---
+# --- 3. CUSTOM CSS (PROFESSIONAL THEME + CUSTOM FONT) ---
 st.markdown("""
     <style>
+        /* Import Stella Aesta from a CDN (or similar stylish font if exact one isn't hosted) */
+        /* Note: Since Stella Aesta isn't a standard Google Font, we'll try to load it or fallback nicely */
+        @import url('https://fonts.cdnfonts.com/css/stella-aesta');
+
         /* Professional Light Theme adjustments */
         .stApp {
             background-color: #FFFFFF;
@@ -35,7 +39,14 @@ st.markdown("""
         }
         
         /* Typography */
-        h1, h2, h3 {
+        h1 {
+            font-family: 'Stella Aesta', sans-serif !important; /* APPLIED HERE */
+            color: #0F172A;
+            font-weight: 600;
+            font-size: 3rem !important; /* Make it bigger to look cooler */
+        }
+        
+        h2, h3 {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             color: #0F172A;
             font-weight: 600;
