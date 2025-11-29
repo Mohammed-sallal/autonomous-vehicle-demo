@@ -117,7 +117,7 @@ st.markdown("""
         /* Target the Thumb (The draggable circle) */
         div[data-testid="stSlider"] div[role="slider"] {
             background-color: #66fcf1 !important; /* Neon Teal */
-            border: 4px solid #45a29e !important;
+            border: 2px solid #45a29e !important;
             box-shadow: 0 0 3px rgba(102, 252, 241, 0.8);
         }
         
@@ -126,14 +126,9 @@ st.markdown("""
             background: #45a29e !important;
         }
         
-        /* Target the Value Popup (e.g., "0.35") */
+        /* Target the Value Popup (e.g., "0.50") */
         div[data-testid="stMarkdownContainer"] p {
             color: #66fcf1 !important; 
-        }
-        
-        /* Target the Min/Max Labels (0.0 and 1.0) specifically inside slider */
-        div[data-testid="stSliderTickBar"] > div {
-             color: #c5c6c7 !important;
         }
 
         /* 8. RADIO BUTTONS */
@@ -360,4 +355,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
