@@ -19,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME) ---
+# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME - NO SLIDER HACKS) ---
 st.markdown("""
     <style>
         /* Import Custom Font */
@@ -112,38 +112,13 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION (FINAL FIX) */
-        
-        /* Thumb (The circle you drag) */
-        div[data-testid="stSlider"] div[role="slider"] {
-            background-color: #66fcf1 !important; /* Neon Teal */
-            border: 2px solid #45a29e !important;
-            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8);
-        }
-        
-        /* Track (The filled line) */
-        div[data-testid="stSlider"] div[data-baseweb="slider"] > div > div > div:first-child {
-            background: #45a29e !important;
-        }
-        
-        /* Value Popup (e.g., "0.35") */
-        div[data-testid="stMarkdownContainer"] p {
-            color: #66fcf1 !important; 
-        }
-        
-        /* Min/Max Labels (0.0 and 1.0) */
-        div[data-testid="stSliderTickBar"] > div {
-             color: #c5c6c7 !important;
+        /* 7. RADIO BUTTONS */
+        /* Only styling the labels, leaving the dots default/red to match slider */
+        [data-testid="stRadio"] > label {
+            color: #c5c6c7 !important;
+            font-weight: bold;
         }
 
-        /* 8. RADIO BUTTONS / PILLS STYLING */
-        /* This targets the segmented control (pills) to make them look like tabs */
-        div[data-baseweb="select"] > div {
-            background-color: #1f2833 !important;
-            color: #c5c6c7 !important;
-            border: 1px solid #45a29e !important;
-        }
-        
     </style>
 """, unsafe_allow_html=True)
 
@@ -182,18 +157,9 @@ def main():
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
     
-    # --- UPDATED: SEGMENTED CONTROL FOR INPUT ---
-    # Using 'selectbox' instead of radio for a cleaner dropdown look, 
-    # OR you can use st.radio(..., horizontal=True) for a toggle bar look.
-    # Let's use horizontal radio for a "Tab/Toggle" feel inside the sidebar.
-    
+    # Input Selection
     st.sidebar.subheader("System Input")
-    input_type = st.sidebar.radio(
-        "Data Source", 
-        ["Image Analysis", "Video Analysis"], 
-        label_visibility="collapsed",
-        horizontal=False # Vertical list looks more like a menu
-    )
+    input_type = st.sidebar.radio("Data Source", ["Image", "Video"], label_visibility="collapsed")
     
     st.sidebar.markdown("---")
     
@@ -252,7 +218,7 @@ def main():
         st.title("Autonomous Vehicle Object Detection")
         
         # --- IMAGE LOGIC ---
-        if input_type == "Image Analysis":
+        if input_type == "Image":
             st.subheader("Image Analysis Module")
             uploaded_file = st.file_uploader("Upload Image File", type=['jpg', 'jpeg', 'png'])
             
@@ -278,7 +244,7 @@ def main():
                             st.info(f"Targets Identified: {count}")
 
         # --- VIDEO LOGIC ---
-        elif input_type == "Video Analysis":
+        elif input_type == "Video":
             st.subheader("Video Analysis Module")
             uploaded_video = st.file_uploader("Upload Video File", type=['mp4', 'avi', 'mov', 'mkv'])
             
