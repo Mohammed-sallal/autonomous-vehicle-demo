@@ -241,14 +241,21 @@ def main():
             uploaded_video = st.file_uploader("Upload Video File", type=['mp4', 'avi', 'mov', 'mkv'])
             
             if uploaded_video and model:
-                tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-                tfile.write(uploaded_video.read())
-                video_path = tfile.name
-                
-                raw_path = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4').name
-                final_path = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4').name
+                # Initialize variables to avoid UnboundLocalError
+                video_path = None
+                raw_path = None
+                final_path = None
+                cap = None # Initialize cap to None
 
                 try:
+                    # Create temp files
+                    tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+                    tfile.write(uploaded_video.read())
+                    video_path = tfile.name
+                    
+                    raw_path = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4').name
+                    final_path = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4').name
+
                     cap = cv2.VideoCapture(video_path)
                     
                     if not cap.isOpened():
@@ -305,11 +312,14 @@ def main():
                     st.error(f"Runtime Error: {e}")
                 finally:
                     # Robust Cleanup
-                    try: cap.release()
+                    try: 
+                        if cap is not None:
+                            cap.release()
                     except: pass
                     
                     for path in [video_path, raw_path, final_path]:
-                        if os.path.exists(path) and path != final_path:
+                        # Only delete if path exists and is not None
+                        if path and os.path.exists(path) and path != final_path:
                             try: os.remove(path)
                             except: pass
 
