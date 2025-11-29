@@ -169,7 +169,7 @@ def main():
     st.sidebar.markdown("---")
     
     # Model Parameters
-    st.sidebar.subheader("Sensitivity")
+    st.sidebar.subheader("Parameters")
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.35, 0.05)
     
     st.sidebar.markdown("---")
@@ -182,6 +182,8 @@ def main():
     
     # VIEW: DETECTION INTERFACE (Image/Video)
     st.title("Autonomous Vehicle Object Detection")
+    st.markdown("---")
+    
     
     # --- IMAGE LOGIC ---
     if input_type == "Image Analysis":
@@ -299,4 +301,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
