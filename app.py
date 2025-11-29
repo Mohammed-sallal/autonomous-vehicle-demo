@@ -19,42 +19,46 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM CSS (PROFESSIONAL THEME + CUSTOM FONT) ---
+# --- 3. CUSTOM CSS (DARK THEME + CUSTOM FONT) ---
 st.markdown("""
     <style>
         /* Import Stella Aesta from a CDN (or similar stylish font if exact one isn't hosted) */
-        /* Note: Since Stella Aesta isn't a standard Google Font, we'll try to load it or fallback nicely */
         @import url('https://fonts.cdnfonts.com/css/stella-aesta');
 
-        /* Professional Light Theme adjustments */
+        /* Dark Theme Backgrounds */
         .stApp {
-            background-color: #FFFFFF;
-            color: #333333;
+            background-color: #0E1117; /* Very Dark Blue/Grey */
+            color: #FAFAFA;
         }
         
-        /* Sidebar Styling - Light Grey */
+        /* Sidebar Styling - Dark Grey */
         [data-testid="stSidebar"] {
-            background-color: #F0F2F6;
-            border-right: 1px solid #D1D5DB;
+            background-color: #262730;
+            border-right: 1px solid #4B5563;
         }
         
         /* Typography */
         h1 {
-            font-family: 'Stella Aesta', sans-serif !important; /* APPLIED HERE */
-            color: #0F172A;
-            font-weight: 600;
-            font-size: 3rem !important; /* Make it bigger to look cooler */
+            font-family: 'Stella Aesta', sans-serif !important;
+            color: #E0E0E0;
+            font-weight: normal;
+            font-size: 3rem !important;
         }
         
-        h2, h3 {
+        h2, h3, h4 {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #0F172A;
+            color: #E0E0E0;
             font-weight: 600;
         }
         
-        /* Buttons */
+        /* General Text */
+        p, label, li, span {
+            color: #C0C0C0 !important;
+        }
+
+        /* Buttons - Dark Theme Style */
         .stButton button {
-            background-color: #2563EB;
+            background-color: #2563EB; /* Bright Blue Accent */
             color: white;
             border-radius: 6px;
             border: none;
@@ -68,10 +72,17 @@ st.markdown("""
         
         /* Metrics */
         [data-testid="stMetricLabel"] {
-            color: #64748B;
+            color: #9CA3AF;
         }
         [data-testid="stMetricValue"] {
-            color: #0F172A;
+            color: #FAFAFA;
+        }
+        
+        /* File Uploader */
+        [data-testid="stFileUploader"] {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
         }
     </style>
 """, unsafe_allow_html=True)
