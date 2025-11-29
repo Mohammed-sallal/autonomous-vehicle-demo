@@ -113,19 +113,19 @@ st.markdown("""
         }
 
         /* 7. SLIDER COLOR CUSTOMIZATION (FIXED) */
-        /* Target the slider track and thumb specifically */
-        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
-            background-color: #66fcf1 !important; /* Neon Teal Thumb */
-            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5); /* Glow Effect */
+        /* This targets the slider thumb (the circle you drag) */
+        div[role="slider"] {
+            background-color: #66fcf1 !important; /* Neon Teal */
+            border: 2px solid #45a29e !important;
         }
         
-        /* Target the filled part of the slider track */
-        div.stSlider > div[data-baseweb="slider"] > div > div {
-            background: #45a29e !important; /* Teal Track */
+        /* This targets the slider track (the line) */
+        div[data-baseweb="slider"] > div > div > div:first-child {
+            background: #45a29e !important;
         }
         
-        /* Target the tick marks and values */
-        div.stSlider > div[data-baseweb="slider"] > div > div > div {
+        /* This targets the value text (e.g., "0.35") */
+        div[data-testid="stSliderTickBar"] > div {
              color: #c5c6c7 !important;
         }
         
