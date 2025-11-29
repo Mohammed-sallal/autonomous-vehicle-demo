@@ -112,18 +112,24 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION */
+        /* 7. SLIDER COLOR CUSTOMIZATION (FIXED) */
+        /* Target the slider track and thumb specifically */
         div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
-            background-color: #66fcf1 !important; /* Thumb Color */
+            background-color: #66fcf1 !important; /* Neon Teal Thumb */
             box-shadow: 0 0 10px rgba(102, 252, 241, 0.5); /* Glow Effect */
         }
+        
+        /* Target the filled part of the slider track */
         div.stSlider > div[data-baseweb="slider"] > div > div {
-            background: linear-gradient(to right, #45a29e 0%, #66fcf1 100%); /* Track Color */
+            background: #45a29e !important; /* Teal Track */
+        }
+        
+        /* Target the tick marks and values */
+        div.stSlider > div[data-baseweb="slider"] > div > div > div {
+             color: #c5c6c7 !important;
         }
         
         /* 8. RADIO BUTTONS (SYSTEM INPUT) Styling */
-        /* Hides the standard radio circles and makes them look like tabs/buttons if possible, 
-           or simply cleans up the colors to match the theme. */
         [data-testid="stRadio"] > label {
             color: #c5c6c7 !important;
             font-weight: bold;
