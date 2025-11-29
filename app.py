@@ -177,6 +177,7 @@ def main():
     
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
+    st.sidebar.markdown("---")
     
     # Input Selection
     st.sidebar.subheader("System Input")
@@ -185,7 +186,7 @@ def main():
     st.sidebar.markdown("---")
     
     # Model Parameters
-    st.sidebar.subheader("Sensitivity")
+    st.sidebar.subheader("Parameters")
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.35, 0.05)
     
     st.sidebar.markdown("---")
@@ -354,3 +355,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
