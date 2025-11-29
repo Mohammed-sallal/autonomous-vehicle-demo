@@ -111,6 +111,29 @@ st.markdown("""
             color: #ffffff;
             font-family: 'Courier New', monospace;
         }
+
+        /* 7. SLIDER COLOR CUSTOMIZATION */
+        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
+            background-color: #66fcf1 !important; /* Thumb Color */
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5); /* Glow Effect */
+        }
+        div.stSlider > div[data-baseweb="slider"] > div > div {
+            background: linear-gradient(to right, #45a29e 0%, #66fcf1 100%); /* Track Color */
+        }
+        
+        /* 8. RADIO BUTTONS (SYSTEM INPUT) Styling */
+        /* Hides the standard radio circles and makes them look like tabs/buttons if possible, 
+           or simply cleans up the colors to match the theme. */
+        [data-testid="stRadio"] > label {
+            color: #c5c6c7 !important;
+            font-weight: bold;
+        }
+        /* Color of the selected radio dot */
+        div[role="radiogroup"] > label > div:first-child {
+            background-color: #66fcf1 !important;
+            border-color: #45a29e !important;
+        }
+
     </style>
 """, unsafe_allow_html=True)
 
