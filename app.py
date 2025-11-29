@@ -56,7 +56,6 @@ st.markdown("""
         }
 
         /* 3. TYPOGRAPHY */
-        /* Main Title with Custom Font */
         h1 {
             font-family: 'Stella Aesta', sans-serif !important;
             color: #66fcf1; 
@@ -71,12 +70,12 @@ st.markdown("""
             font-weight: 600;
         }
         
-        /* 4. PROFESSIONAL BUTTONS (High Tech Look) */
+        /* 4. PROFESSIONAL BUTTONS */
         .stButton button {
             background-color: transparent;
             color: #66fcf1;
             border: 1px solid #45a29e;
-            border-radius: 0px; /* Sharp Edges */
+            border-radius: 0px; 
             padding: 0.6rem 1.5rem;
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
@@ -112,29 +111,35 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION (FIXED) */
-        /* This targets the slider thumb (the circle you drag) */
-        div[role="slider"] {
-            background-color: #66fcf1 !important; /* Neon Teal */
-            border: 2px solid #45a29e !important;
+        /* 7. SLIDER COLOR CUSTOMIZATION (COMPLETE OVERHAUL) */
+        
+        /* The Thumb (Draggable Circle) */
+        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
+            background-color: #66fcf1 !important; 
+            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8); 
+            border: none !important;
         }
         
-        /* This targets the slider track (the line) */
-        div[data-baseweb="slider"] > div > div > div:first-child {
-            background: #45a29e !important;
+        /* The Track (The filled line to the left) */
+        div.stSlider > div[data-baseweb="slider"] > div > div {
+            background: #45a29e !important; 
         }
         
-        /* This targets the value text (e.g., "0.35") */
+        /* The Value Text (The number "0.35" above the slider) */
+        div[data-testid="stMarkdownContainer"] p {
+            color: #66fcf1 !important; /* Force Teal color for the value */
+        }
+        
+        /* The Min/Max Labels (0.0 and 1.0) */
         div[data-testid="stSliderTickBar"] > div {
              color: #c5c6c7 !important;
         }
-        
-        /* 8. RADIO BUTTONS (SYSTEM INPUT) Styling */
+
+        /* 8. RADIO BUTTONS */
         [data-testid="stRadio"] > label {
             color: #c5c6c7 !important;
             font-weight: bold;
         }
-        /* Color of the selected radio dot */
         div[role="radiogroup"] > label > div:first-child {
             background-color: #66fcf1 !important;
             border-color: #45a29e !important;
