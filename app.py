@@ -19,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME) ---
+# --- 3. CUSTOM CSS (DARK PROFESSIONAL THEME + NEON SLIDER) ---
 st.markdown("""
     <style>
         /* Import Custom Font */
@@ -112,7 +112,31 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. RADIO BUTTONS */
+        /* 7. SLIDER COLOR CUSTOMIZATION (MATCHING THEME) */
+        
+        /* The Thumb (Draggable Circle) */
+        div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
+            background-color: #66fcf1 !important; /* Neon Teal */
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5); /* Glow Effect */
+            border: 2px solid #45a29e !important;
+        }
+        
+        /* The Track (The filled line to the left) */
+        div.stSlider > div[data-baseweb="slider"] > div > div {
+            background: #45a29e !important; /* Slate Blue/Green */
+        }
+        
+        /* The Value Text (The number above the slider) */
+        div[data-testid="stMarkdownContainer"] p {
+            color: #66fcf1 !important; /* Neon Teal Text */
+        }
+        
+        /* The Min/Max Labels (0.0 and 1.0) */
+        div[data-testid="stSliderTickBar"] > div {
+             color: #c5c6c7 !important; /* Light Grey Text */
+        }
+
+        /* 8. RADIO BUTTONS */
         [data-testid="stRadio"] > label {
             color: #c5c6c7 !important;
             font-weight: bold;
