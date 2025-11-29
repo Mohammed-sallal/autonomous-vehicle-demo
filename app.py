@@ -112,32 +112,28 @@ st.markdown("""
             font-family: 'Courier New', monospace;
         }
 
-        /* 7. SLIDER COLOR CUSTOMIZATION (Aggressive targeting) */
+        /* 7. SLIDER COLOR CUSTOMIZATION (FINAL FIX) */
         
-        /* The Thumb (Circle) */
-        div[role="slider"] {
-            background-color: #66fcf1 !important; 
-            box-shadow: 0 0 0 2px #45a29e !important;
+        /* Target the Thumb (The draggable circle) */
+        div[data-testid="stSlider"] div[role="slider"] {
+            background-color: #66fcf1 !important; /* Neon Teal */
+            border: 2px solid #45a29e !important;
+            box-shadow: 0 0 5px rgba(102, 252, 241, 0.8);
         }
         
-        /* The Active Track (Filled line) */
-        div[data-baseweb="slider"] > div > div > div:first-child {
+        /* Target the Track (The filled line) */
+        div[data-testid="stSlider"] div[data-baseweb="slider"] > div > div > div:first-child {
             background: #45a29e !important;
         }
         
-        /* The Value Popup (e.g., "0.35") */
-        div[data-testid="stMarkdownContainer"] > p {
-            color: #66fcf1 !important;
+        /* Target the Value Popup (e.g., "0.35") */
+        div[data-testid="stMarkdownContainer"] p {
+            color: #66fcf1 !important; 
         }
         
-        /* The Min/Max Labels (0.0 and 1.0) - Targeting all text spans inside slider */
-        div[data-testid="stSlider"] div[data-testid="stMarkdownContainer"] p {
+        /* Target the Min/Max Labels (0.0 and 1.0) specifically inside slider */
+        div[data-testid="stSliderTickBar"] > div {
              color: #c5c6c7 !important;
-        }
-        
-        /* Fix for edges/background peeking through */
-        div[data-baseweb="slider"] {
-            background-color: transparent !important;
         }
 
         /* 8. RADIO BUTTONS */
