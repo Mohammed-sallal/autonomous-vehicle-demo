@@ -14,7 +14,7 @@ except ImportError:
 
 # --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="AV Perception System",
+    page_title="DEPI Graduation Project",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -156,6 +156,7 @@ def main():
     
     # --- SIDEBAR: CONTROL PANEL ---
     st.sidebar.header("Control Panel")
+    st.sidebar.markdown("---")
     
     # Input Selection - USING SELECTBOX AS REQUESTED
     st.sidebar.subheader("System Input")
@@ -298,3 +299,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
